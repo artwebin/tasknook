@@ -56,7 +56,7 @@ export function Layout({ children, isMobileMenuOpen, setIsMobileMenuOpen, active
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#2b2e4a]/10 to-[#e84545]/10 dark:from-[#2b2e4a]/5 dark:to-[#e84545]/5 dark:bg-gray-900">
       {/* Desktop Header */}
-      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 relative z-50">
+      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 relative z-50 hidden md:block">
         <div className="w-full px-4 md:px-6 h-16 hidden md:flex justify-between items-center">
           <div className="flex items-center gap-3">
             <img
