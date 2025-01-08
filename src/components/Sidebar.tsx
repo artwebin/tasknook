@@ -18,7 +18,7 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
 
   return (
     <nav className={`w-full h-full bg-white dark:bg-gray-800 backdrop-blur-lg rounded-2xl md:rounded-none border border-gray-200/50 dark:border-gray-700/50 md:border-r md:border-gray-200 md:dark:border-gray-700 p-3 md:p-4 flex flex-col overflow-hidden ${
-      window.innerWidth < 768 ? 'h-[350px]' : 'h-full'
+      window.innerWidth < 768 ? 'h-[350px]  translate-y-[-10px]' : 'h-full'
     }`}>
       <div className="flex flex-col space-y-2">
         {navItems.map(({ id, label, icon: Icon, count }) => (
@@ -45,7 +45,8 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
           </button>
         ))}
       </div>
-      <div className="hidden md:block mt-auto pt-4 text-center text-sm text-gray-400 dark:text-gray-500">
+      {/* Copyright inside popup */}
+      <div className="mt-auto pt-4 text-center text-sm text-gray-400 dark:text-gray-500">
         © TaskNook, ver. 1.5
       </div>
     </nav>
