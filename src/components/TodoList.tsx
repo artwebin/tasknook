@@ -142,7 +142,7 @@ export function TodoList({
           isActive 
             ? 'shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.3)]' 
             : 'shadow-[0_8px_30px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]'
-        } ${isDragging ? 'opacity-50' : ''} py-6 mb-4 first:border-t-0 border-y border-gray-200/95 dark:border-gray-700/95 last:border-b-0 last:mb-0`}
+        } ${isDragging ? 'opacity-50' : ''} py-6 mb-4 first:md:border-t first:border-t-0 border-y border-gray-200/95 dark:border-gray-700/95 last:border-b-0 last:mb-0`}
         onClick={onActivate}
       >
         <div className="px-2 md:p-6">
