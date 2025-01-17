@@ -8,6 +8,7 @@ import { TodoList as TodoListType } from '../types';
 import { useLists } from '../context/ListsContext';
 import { Modal } from './Modal';
 import { RecurringModal } from './RecurringModal';
+import { ConfirmationModal } from './ConfirmationModal';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { formatDistanceToNow } from 'date-fns';
@@ -42,6 +43,7 @@ export function TodoList({
   const [isRecurringModalOpen, setIsRecurringModalOpen] = useState(false);
   const [showMobileInput, setShowMobileInput] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showDeleteTemplateModal, setShowDeleteTemplateModal] = useState(false);
 
   const {
     attributes,
@@ -118,7 +120,11 @@ export function TodoList({
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onDelete();
+    if (isTemplate) {
+      setShowDeleteTemplateModal(true);
+    } else {
+      onDelete();
+    }
   };
 
   const handleRestore = (e: React.MouseEvent) => {
@@ -385,7 +391,8 @@ export function TodoList({
               {list.type === 'tasks' ? (
                 list.todos.map(todo => (
                   <div
-                    key={todo.id}
+                    key={todo.id} 
+                    className={isTemplate ? 'pointer-events-none opacity-80' : ''}
                   >
                     <TodoItem
                       todo={todo}
@@ -398,7 +405,8 @@ export function TodoList({
               ) : (
                 list.textItems.map(item => (
                   <div
-                    key={item.id}
+                    key={item.id} 
+                    className={isTemplate ? 'pointer-events-none opacity-80' : ''}
                   >
                     <TextItem
                       key={item.id}
@@ -492,6 +500,18 @@ export function TodoList({
         onClose={() => setIsRecurringModalOpen(false)}
         onSave={(schedule) => updateTemplateSchedule(list.id, schedule)}
         initialSchedule={list.recurringSchedule}
+      />
+
+      <ConfirmationModal
+        isOpen={showDeleteTemplateModal}
+        onClose={() => setShowDeleteTemplateModal(false)}
+        onConfirm={() => {
+          onDelete();
+          setShowDeleteTemplateModal(false);
+        }}
+        title="Delete Template"
+        message={`Are you sure you want to delete "${list.name}"? This action cannot be undone and will affect any recurring lists configured to use this template.`}
+        confirmText="Delete Template"
       />
     </>
   );
