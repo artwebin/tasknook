@@ -47,7 +47,7 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
       </div>
       {/* Copyright inside popup */}
       <div className="mt-auto pt-4 text-center text-sm text-gray-400 dark:text-gray-500">
-        © TaskNook, ver. 1.5
+        © TaskNook, ver. 1.6
       </div>
     </nav>
   );
