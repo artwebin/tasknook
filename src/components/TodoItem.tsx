@@ -15,10 +15,10 @@ export function TodoItem({ todo, onToggle, onDelete, onPriorityChange }: TodoIte
 
   return (
     <div 
-      className={`flex items-center gap-3 p-2 md:p-4 rounded-xl group transition-all duration-300 border ${
+      className={`flex items-center gap-3 p-2 md:p-4 rounded-xl group transition-all duration-500 border overflow-hidden ${
         priorityStyle.border
       } ${priorityStyle.bg} ${
-        todo.isCompleting || todo.isRemoving ? 'opacity-0 translate-x-full' : 'opacity-100 translate-x-0'
+        todo.isCompleting ? 'opacity-0 translate-x-full h-0 my-0 py-0 border-0' : 'opacity-100 translate-x-0'
       }`}
       onClick={(e) => e.stopPropagation()}
     >

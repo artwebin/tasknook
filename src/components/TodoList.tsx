@@ -97,15 +97,19 @@ export function TodoList({
 
   const handleToggle = (todoId: number) => {
     toggleTodo(list.id, todoId);
+    // First wait a tiny bit for the completed state to be visible
     setTimeout(() => {
-      const todo = list.todos.find(t => t.id === todoId);
-      if (todo) {
-        todo.isCompleting = true;
-      }
       setTimeout(() => {
-      deleteTodoFromList(list.id, todoId);
-      }, 300);
-    }, 500);
+        const todo = list.todos.find(t => t.id === todoId);
+        if (todo) {
+          todo.isCompleting = true;
+          // Wait 2 seconds before moving to deleted
+          setTimeout(() => {
+            deleteTodoFromList(list.id, todoId);
+          }, 2000);
+        }
+      }, 50);
+    }, 100);
   };
 
   const handleSaveTemplate = (e: React.MouseEvent) => {
