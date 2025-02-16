@@ -10,6 +10,7 @@ export interface DbList {
   created_at: string;
   is_template: boolean;
   is_deleted: boolean;
+  deleted_at: string | null;
   recurring_schedule: {
     enabled: boolean;
     time: string;
@@ -202,96 +203,7 @@ export async function deleteListPermanently(listId: string) {
 }
 
 export async function checkAndCreateRecurringLists() {
-  const now = new Date();
-  const currentTime = format(now, 'HH:mm');
-
-  // Get all template lists with recurring schedules
-  const { data: templates, error: templatesError } = await supabase
-    .from('lists')
-    .select('*')
-    .eq('is_template', true)
-    .not('recurring_schedule', 'is', null);
-
-  if (templatesError) throw templatesError;
-
-  for (const template of templates) {
-    if (!template.recurring_schedule?.enabled) continue;
-
-    const scheduleTime = template.recurring_schedule.time;
-    if (currentTime !== scheduleTime) continue;
-
-    // Find the existing list for this template
-    const { data: existingLists, error: existingError } = await supabase
-      .from('lists')
-      .select('*')
-      .eq('name', template.name.replace(' Template', ''))
-      .eq('user_id', template.user_id)
-      .eq('is_template', false)
-      .eq('is_deleted', false);
-
-    if (existingError) throw existingError;
-
-    let targetList;
-    if (existingLists?.length) {
-      targetList = existingLists[0];
-      
-      // Delete all existing items
-      const { error: deleteError } = await supabase
-        .from('items')
-        .delete()
-        .eq('list_id', targetList.id);
-      
-      if (deleteError) throw deleteError;
-
-      // Update the list's timestamp
-      const { error: updateError } = await supabase
-        .from('lists')
-        .update({ created_at: new Date().toISOString() })
-        .eq('id', targetList.id);
-      
-      if (updateError) throw updateError;
-    } else {
-      // Create new list if none exists
-      const { data: newList, error: createError } = await supabase
-        .from('lists')
-        .insert({
-          user_id: template.user_id,
-          name: template.name.replace(' Template', ''),
-          type: template.type,
-          is_template: false,
-          is_deleted: false
-        })
-        .select()
-        .single();
-
-      if (createError) throw createError;
-      targetList = newList;
-    }
-
-    // Copy template items to target list
-    const { data: templateItems, error: itemsError } = await supabase
-      .from('items')
-      .select('*')
-      .eq('list_id', template.id)
-      .eq('is_deleted', false);
-
-    if (itemsError) throw itemsError;
-
-    if (templateItems?.length) {
-      const newItems = templateItems.map(item => ({
-        list_id: targetList.id,
-        text: item.text,
-        type: item.type,
-        priority: item.priority,
-        completed: false,
-        is_deleted: false
-      }));
-
-      const { error: insertError } = await supabase
-        .from('items')
-        .insert(newItems);
-
-      if (insertError) throw insertError;
-    }
-  }
+  // Call the database function to handle recurring list creation
+  const { error } = await supabase.rpc('handle_recurring_list_creation');
+  if (error) throw error;
 }
